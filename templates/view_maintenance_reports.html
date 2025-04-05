@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maintenance Reports</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #00264d;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h2 {
+      color: #00264d;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #004080;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    button {
+      padding: 6px 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Maintenance Reports</h1>
+  </header>
+
+  <div class="container">
+    <h2>Submitted Maintenance Reports</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Technician Name</th>
+          <th>Date</th>
+          <th>Elevator Type</th>
+          <th>Status</th>
+          <th>View Report</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Project A</td>
+          <td>Ahmed Ali</td>
+          <td>2025-04-01</td>
+          <td>Schindler</td>
+          <td>Completed</td>
+          <td><button onclick="window.open('report_a.pdf')">View PDF</button></td>
+        </tr>
+        <tr>
+          <td>Project B</td>
+          <td>Khaled Omar</td>
+          <td>2025-04-02</td>
+          <td>Otis</td>
+          <td>Pending</td>
+          <td><button onclick="window.open('report_b.pdf')">View PDF</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

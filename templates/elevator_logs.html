@@ -1,0 +1,14 @@
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Technician</th>
+    </tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.timestamp }}</td>
+        <td>{{ log.description }}</td>
+        <td>{{ log.technician.email }}</td>
+    </tr>
+    {% endfor %}
+</table>

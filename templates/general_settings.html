@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>General Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fa;
+    }
+
+    header {
+      background-color: #00264d;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #00264d;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00264d;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>General Settings</h1>
+</header>
+
+<div class="container">
+  <h2>Update Company Info</h2>
+  <form>
+    <label for="companyName">Company Name</label>
+    <input type="text" id="companyName" placeholder="Enter company name" />
+
+    <label for="companyLogo">Company Logo</label>
+    <input type="file" id="companyLogo" />
+
+    <label for="email">Contact Email</label>
+    <input type="email" id="email" placeholder="Enter email address" />
+
+    <label for="phone">Landline Number</label>
+    <input type="text" id="phone" placeholder="Enter landline number" />
+
+    <button type="submit">Save Settings</button>
+  </form>
+</div>
+
+</body>
+</html>
