@@ -1,43 +1,50 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
-from config import Config
-from models import db, User
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for
+import psycopg2
 import os
 
 app = Flask(__name__)
-app.config.from_object(Config)
-db.init_app(app)
 
-# ✅ إنشاء الجداول تلقائيًا عند بدء التطبيق
-with app.app_context():
-    print("✅ App has been loaded by Gunicorn!")
-    db.create_all()
-    print("✅ Tables created automatically.")
+# رابط قاعدة البيانات من Railway
+DATABASE_URL = "postgresql://postgres:zKSqKWMkqmfCxiaXOuiudCbCAzIdxPUA@yamanote.proxy.rlwy.net:32743/railway"
+
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL)
+    return conn
 
 @app.route('/')
-def index():
+def home():
     return render_template('login.html')
 
-@app.route('/verify_otp', methods=['POST'])
-def verify_otp():
-    phone = request.form['phone']
-    otp = request.form['otp']
-    user = User.query.filter_by(phone=phone).first()
-    if user and user.is_active:
-        if (user.role == 'admin' and otp == '4321') or (user.role == 'technician' and otp == '55555'):
-            session['user_id'] = user.id
-            session['role'] = user.role
-            if user.role == 'admin':
-                return redirect('/admin_dashboard_ai_tools.html')
-            elif user.role == 'technician':
-                return redirect('/technician_dashboard.html')
-    return render_template('401.html')
+@app.route('/login', methods=['POST'])
+def login():
+    phone = request.form['phone_number']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT role FROM users WHERE phone_number = %s", (phone,))
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
+    if result:
+        role = result[0]
+        if role == 'admin':
+            return redirect(url_for('admin_dashboard'))
+        elif role == 'tech':
+            return redirect(url_for('technician_dashboard'))
+        else:
+            return "دور غير معروف"
+    else:
+        return "رقم الجوال غير مسجل في النظام"
+
+@app.route('/admin')
+def admin_dashboard():
+    return render_template('admin_dashboard_ai_tools.html')
+
+@app.route('/technician')
+def technician_dashboard():
+    return render_template('technician_dashboard.html')
 
 if __name__ == "__main__":
+    import os
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
