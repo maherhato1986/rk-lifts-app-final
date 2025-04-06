@@ -4,17 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from models import db, User
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
-
-# ✅ Auto-create tables on first request (for Railway)
-@app.before_first_request
-def initialize_database():
-    with app.app_context():
-        db.create_all()
-        print("✅ Database tables created (if not exist).")
 
 @app.route('/')
 def index():
@@ -42,4 +36,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
