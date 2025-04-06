@@ -1,71 +1,45 @@
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-from datetime import timedelta
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from models import db, User
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
-
-@app.route("/", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        phone = request.form.get("phone")
-        otp = request.form.get("otp")
-
-        user = User.query.filter_by(phone=phone, is_active=True).first()
-        if user:
-            if (user.role == "admin" and otp == "4321") or (user.role == "technician" and otp == "55555"):
-                session["user"] = phone
-                session["role"] = user.role
-                if user.role == "admin":
-                    return redirect("/admin")
-                else:
-                    return redirect("/technician")
-            else:
-                flash("Incorrect OTP.")
-        else:
-            flash("Phone number not authorized.")
-    return render_template("login.html")
-
-@app.route("/admin")
-def admin_dashboard():
-    if session.get("role") == "admin":
-        return "Welcome to the Admin Dashboard!"
-    return redirect(url_for("login"))
-
-@app.route("/technician")
-def technician_dashboard():
-    if session.get("role") == "technician":
-        return "Welcome to the Technician Dashboard!"
-    return redirect(url_for("login"))
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("login"))
-
-
-@app.route("/clients", methods=["GET", "POST"])
-def manage_clients():
-    from models import db, Client
-    if request.method == "POST":
-        name = request.form.get("name")
-        phone = request.form.get("phone")
-        email = request.form.get("email")
-        company = request.form.get("company")
-        user_id = 1  # Temporary: Admin ID 1 as added_by
-        new_client = Client(name=name, phone=phone, email=email, company=company, added_by=user_id)
-        db.session.add(new_client)
-        db.session.commit()
-        return redirect(url_for("manage_clients"))
-    clients = Client.query.all()
-    return render_template("manage_clients.html", clients=clients)
-
-
-if __name__ == "__main__":
+# ✅ Auto-create tables on first request (for Railway)
+@app.before_first_request
+def initialize_database():
     with app.app_context():
         db.create_all()
+        print("✅ Database tables created (if not exist).")
+
+@app.route('/')
+def index():
+    return render_template('login.html')
+
+@app.route('/verify_otp', methods=['POST'])
+def verify_otp():
+    phone = request.form['phone']
+    otp = request.form['otp']
+
+    user = User.query.filter_by(phone=phone).first()
+    if user and user.is_active:
+        if (user.role == 'admin' and otp == '4321') or (user.role == 'technician' and otp == '55555'):
+            session['user_id'] = user.id
+            session['role'] = user.role
+            if user.role == 'admin':
+                return redirect('/admin_dashboard_ai_tools.html')
+            elif user.role == 'technician':
+                return redirect('/technician_dashboard.html')
+    return render_template('401.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+if __name__ == '__main__':
     app.run(debug=True)
