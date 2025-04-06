@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
@@ -35,6 +34,8 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+# سطر تأكيد وصول Gunicorn للتطبيق
+print("✅ App has been loaded by Gunicorn!")
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
