@@ -4,11 +4,16 @@ import os
 
 app = Flask(__name__)
 
+# قراءة رابط قاعدة البيانات من متغير البيئة
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
-    conn = psycopg2.connect(DATABASE_URL)
-    return conn
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        return conn
+    except Exception as e:
+        print("Database connection error:", e)
+        return None
 
 @app.route('/')
 def home():
@@ -18,6 +23,9 @@ def home():
 def login():
     phone = request.form['phone']
     conn = get_db_connection()
+    if conn is None:
+        return "فشل الاتصال بقاعدة البيانات"
+
     cur = conn.cursor()
     cur.execute("SELECT role FROM users WHERE phone = %s", (phone,))
     result = cur.fetchone()
@@ -44,4 +52,4 @@ def technician_dashboard():
     return render_template('technician_dashboard.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
