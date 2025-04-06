@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # رابط قاعدة البيانات من Railway
-DATABASE_URL = "postgresql://postgres:zKSqKWMkqmfCxiaXOuiudCbCAzIdxPUA@yamanote.proxy.rlwy.net:32743/railway"
+DATABASE_URL = os.environ.get("DATABASE_URL")  # أفضل نخليه ديناميكي بدل ما نثبته
 
 def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL)
@@ -20,7 +20,7 @@ def login():
     phone = request.form['phone_number']
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT role FROM users WHERE phone_number = %s", (phone,))
+    cur.execute("SELECT role FROM users WHERE phone = %s", (phone,))  # ✅ تم التعديل هنا
     result = cur.fetchone()
     cur.close()
     conn.close()
@@ -43,5 +43,3 @@ def admin_dashboard():
 @app.route('/technician')
 def technician_dashboard():
     return render_template('technician_dashboard.html')
-
-
