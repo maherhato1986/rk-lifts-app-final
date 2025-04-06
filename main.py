@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import psycopg2
 import os
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 # رابط قاعدة البيانات من Railway
 DATABASE_URL = os.environ.get("DATABASE_URL")  # أفضل نخليه ديناميكي بدل ما نثبته
@@ -11,11 +11,11 @@ def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL)
     return conn
 
-@app.route('/')
+@application.route('/')
 def home():
     return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
+@application.route('/login', methods=['POST'])
 def login():
     phone = request.form['phone_number']
     conn = get_db_connection()
@@ -36,10 +36,10 @@ def login():
     else:
         return "رقم الجوال غير مسجل في النظام"
 
-@app.route('/admin')
+@application.route('/admin')
 def admin_dashboard():
     return render_template('admin_dashboard_ai_tools.html')
 
-@app.route('/technician')
+@application.route('/technician')
 def technician_dashboard():
     return render_template('technician_dashboard.html')
