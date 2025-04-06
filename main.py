@@ -9,6 +9,12 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
+# ✅ إنشاء الجداول تلقائيًا عند بدء التطبيق
+with app.app_context():
+    print("✅ App has been loaded by Gunicorn!")
+    db.create_all()
+    print("✅ Tables created automatically.")
+
 @app.route('/')
 def index():
     return render_template('login.html')
@@ -17,7 +23,6 @@ def index():
 def verify_otp():
     phone = request.form['phone']
     otp = request.form['otp']
-
     user = User.query.filter_by(phone=phone).first()
     if user and user.is_active:
         if (user.role == 'admin' and otp == '4321') or (user.role == 'technician' and otp == '55555'):
@@ -33,9 +38,6 @@ def verify_otp():
 def logout():
     session.clear()
     return redirect(url_for('index'))
-
-# سطر تأكيد وصول Gunicorn للتطبيق
-print("✅ App has been loaded by Gunicorn!")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
