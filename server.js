@@ -1,55 +1,70 @@
 
 const express = require('express');
+const multer = require('multer');
 const path = require('path');
 const { Pool } = require('pg');
-const app = express();
-const PORT = process.env.PORT || 3000;
+const fs = require('fs');
+require('dotenv').config();
 
-// إعداد الاتصال بقاعدة البيانات
+const app = express();
+const port = process.env.PORT || 3000;
+
+// إعداد قاعدة البيانات
 const pool = new Pool({
-  user: 'your_db_user',
-  host: 'localhost',
-  database: 'rklifts',
-  password: 'your_db_password',
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
-// إعدادات Express
-app.use(express.static(path.join(__dirname, 'public')));
+// إعداد رفع الصور
+const upload = multer({ dest: 'uploads/' });
+app.use('/uploads', express.static('uploads'));
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// توجيه الصفحات
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'login.html'));
-});
+// استقبال استفسار عطل وحفظه مع الرد
+app.post('/ai-diagnose', upload.single('image'), async (req, res) => {
+  const { elevator_id, question } = req.body;
+  const image = req.file;
 
-app.post('/login', async (req, res) => {
-  const { phone } = req.body;
+  if (!elevator_id || !question) {
+    return res.status(400).json({ response: "Missing elevator ID or question." });
+  }
+
+  // رد افتراضي من الذكاء الاصطناعي (محاكي حالياً)
+  const ai_response = `Based on the issue described, please check the door sensors, controller relays, and ensure there is no obstruction in the shaft.`;
+
+  let image_url = null;
+  if (image) {
+    image_url = `/uploads/${image.filename}`;
+  }
+
   try {
-    const result = await pool.query('SELECT role FROM users WHERE phone = $1', [phone]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Please ask the administrator to register your number in the system. Contact: +966542805145 or admin@rk-lifts.com"
-      });
-    }
+    await pool.query(
+      'INSERT INTO ai_diagnosis (elevator_id, question, ai_response, image_url) VALUES ($1, $2, $3, $4)',
+      [elevator_id, question, ai_response, image_url]
+    );
 
-    const role = result.rows[0].role;
-    if (role === 'admin') {
-      res.json({ success: true, redirect: '/admin/dashboard' });
-    } else if (role === 'technician') {
-      res.json({ success: true, redirect: '/technician/dashboard' });
-    } else {
-      res.status(403).json({ success: false, message: 'Unauthorized role' });
-    }
+    res.json({ response: ai_response });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Error saving AI diagnosis:', err);
+    res.status(500).json({ response: "Server error occurred." });
   }
 });
 
-// تشغيل السيرفر
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// جلب سجل الأعطال السابقة
+app.get('/ai-diagnosis-history', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT id, elevator_id, question, ai_response, image_url, created_at FROM ai_diagnosis ORDER BY created_at DESC LIMIT 50'
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching history:', err);
+    res.status(500).json({ error: "Error fetching history" });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`AI Diagnosis server running on http://localhost:${port}`);
 });
