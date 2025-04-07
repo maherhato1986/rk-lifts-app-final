@@ -6,8 +6,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // إعداد الاتصال بقاعدة البيانات على Render
+const { Pool } = require('pg');
+
 const pool = new Pool({
-  connectionString: 'postgres://rk_lifts_db_user:AtPNzbj2RVW2TKgk1DuzQ1yCHtVVJjIzI@dpg-cvq0edi4d50c73c090f0-a.render.com:5432/rk_lifts_db',
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
