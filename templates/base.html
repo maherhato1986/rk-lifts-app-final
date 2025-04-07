@@ -1,95 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Admin Dashboard{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            height: 100vh;
-            background-color: #f4f6f8;
-        }
-        .sidebar {
-            width: 220px;
-            background-color: #1a202c;
-            color: white;
-            padding-top: 20px;
-            position: fixed;
-            height: 100%;
-        }
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .sidebar a {
-            display: block;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        .sidebar a:hover {
-            background-color: #2d3748;
-        }
-        .content {
-            margin-left: 220px;
-            padding: 20px;
-            flex: 1;
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                position: absolute;
-                left: -220px;
-                transition: left 0.3s;
-            }
-            .sidebar.active {
-                left: 0;
-            }
-            .content {
-                margin-left: 0;
-            }
-            .toggle-btn {
-                position: absolute;
-                left: 10px;
-                top: 10px;
-                background-color: #1a202c;
-                color: white;
-                border: none;
-                padding: 10px;
-                font-size: 18px;
-                cursor: pointer;
-                z-index: 1000;
-            }
-        }
-    </style>
+    <title>Elevator Maintenance System</title>
 </head>
 <body>
-
-<div class="sidebar" id="sidebar">
-    <h2>Admin</h2>
-    <a href="/admin">Dashboard</a>
-    <a href="/admin/projects">Projects</a>
-    <a href="/admin/clients">Clients</a>
-    <a href="/admin/invoices">Invoices</a>
-    <a href="/admin/quotes">Quotes</a>
-    <a href="/admin/settings">Settings</a>
-</div>
-
-<div class="content">
-    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a> |
+        <a href="{{ url_for('submit_report') }}">Submit Report</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <hr>
     {% block content %}{% endblock %}
-</div>
-
-<script>
-    function toggleSidebar() {
-        var sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('active');
-    }
-</script>
-
 </body>
 </html>
