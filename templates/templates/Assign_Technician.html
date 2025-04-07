@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assign Technician</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      color: #00264d;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    select, input[type="text"], button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Assign Technician to Project</h2>
+
+    <label for="project">Select Project</label>
+    <select id="project">
+      <option value="">-- Select Project --</option>
+      <option value="Project A">Project A</option>
+      <option value="Project B">Project B</option>
+    </select>
+
+    <label for="technician">Select Technician</label>
+    <select id="technician">
+      <option value="">-- Select Technician --</option>
+      <option value="Tech 1">Tech 1</option>
+      <option value="Tech 2">Tech 2</option>
+    </select>
+
+    <label for="note">Notes</label>
+    <input type="text" id="note" placeholder="Any special notes or instructions">
+
+    <button onclick="assignTechnician()">Assign Technician</button>
+  </div>
+
+  <script>
+    function assignTechnician() {
+      const project = document.getElementById('project').value;
+      const technician = document.getElementById('technician').value;
+      const note = document.getElementById('note').value;
+
+      if (!project || !technician) {
+        alert("Please select both a project and a technician.");
+        return;
+      }
+
+      alert(`Technician ${technician} assigned to ${project} with note: ${note}`);
+    }
+  </script>
+</body>
+</html>

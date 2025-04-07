@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Technicians</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #004080;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #004080;
+      color: white;
+    }
+    input, button {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .form-section {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Manage Technicians</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tech in technicians %}
+        <tr>
+          <td>{{ tech.name }}</td>
+          <td>{{ tech.phone }}</td>
+          <td>{{ 'Active' if tech.is_active else 'Inactive' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="form-section">
+      <h3>Add New Technician</h3>
+      <form method="POST">
+        <input type="text" name="name" placeholder="Technician Name" required />
+        <input type="text" name="phone" placeholder="Phone Number" required />
+        <button type="submit">Add Technician</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

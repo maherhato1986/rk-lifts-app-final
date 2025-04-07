@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <title>{% block title %}Technician Dashboard{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -15,7 +15,7 @@
         }
         .sidebar {
             width: 220px;
-            background-color: #1a202c;
+            background-color: #2b2d42;
             color: white;
             padding-top: 20px;
             position: fixed;
@@ -33,7 +33,7 @@
             transition: background 0.2s;
         }
         .sidebar a:hover {
-            background-color: #2d3748;
+            background-color: #3a3f5a;
         }
         .content {
             margin-left: 220px;
@@ -56,7 +56,7 @@
                 position: absolute;
                 left: 10px;
                 top: 10px;
-                background-color: #1a202c;
+                background-color: #2b2d42;
                 color: white;
                 border: none;
                 padding: 10px;
@@ -70,13 +70,13 @@
 <body>
 
 <div class="sidebar" id="sidebar">
-    <h2>Admin</h2>
-    <a href="/admin">Dashboard</a>
-    <a href="/admin/projects">Projects</a>
-    <a href="/admin/clients">Clients</a>
-    <a href="/admin/invoices">Invoices</a>
-    <a href="/admin/quotes">Quotes</a>
-    <a href="/admin/settings">Settings</a>
+    <h2>Technician</h2>
+    <a href="/technician">Dashboard</a>
+    <a href="/technician/maintenance">Maintenance</a>
+    <a href="/technician/faults">Faults</a>
+    <a href="/technician/submit-report">Submit Report</a>
+    <a href="/technician/ai-assist">AI Assist</a>
+    <a href="/technician/reports">Reports</a>
 </div>
 
 <div class="content">

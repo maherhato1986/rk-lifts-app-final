@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Quotes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #00264d;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h2 {
+      color: #00264d;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #004080;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    button {
+      padding: 6px 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>View Price Quotes</h1>
+  </header>
+
+  <div class="container">
+    <h2>Generated Quotes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Quote ID</th>
+          <th>Client Name</th>
+          <th>Date</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th>View</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q-101</td>
+          <td>Ali & Sons</td>
+          <td>2025-04-01</td>
+          <td>Lift Modernization A</td>
+          <td>Sent</td>
+          <td><button onclick="window.open('quote_q101.pdf')">View PDF</button></td>
+        </tr>
+        <tr>
+          <td>Q-102</td>
+          <td>XYZ Corp</td>
+          <td>2025-04-02</td>
+          <td>New Lift Project B</td>
+          <td>Draft</td>
+          <td><button onclick="window.open('quote_q102.pdf')">View PDF</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

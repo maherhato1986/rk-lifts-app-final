@@ -2,101 +2,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - RKLIFTS SYS</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .login-container {
-      background-color: white;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
-      max-width: 400px;
-      width: 100%;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #004080;
-    }
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      margin-top: 15px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .message {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Login - RKLIFTS SYS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <label for="phone">Phone Number:</label>
-      <input type="text" id="phone" name="phone" placeholder="05XXXXXXXX" required>
+    <div class="login-container">
+        <h2 style="text-align:center;">Login</h2>
+        <form method="POST" action="/send-otp">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" placeholder="e.g. 05xxxxxxxx" required>
+            <button type="submit">Send OTP</button>
+        </form>
 
-      <button type="button" onclick="sendOTP()">Send OTP</button>
+        <form method="POST" action="/verify-otp">
+            <label for="otp">Enter OTP</label>
+            <input type="number" id="otp" name="otp" placeholder="6-digit code" required>
+            <button type="submit">Login</button>
+        </form>
 
-      <div id="otpSection" style="display:none;">
-        <label for="otp">Enter OTP:</label>
-        <input type="number" id="otp" name="otp" placeholder="4-digit code" required>
-        <button type="submit">Login</button>
-      </div>
-    </form>
-    <div class="message" id="loginMessage"></div>
-  </div>
-
-  <script>
-    function sendOTP() {
-      const phoneInput = document.getElementById("phone").value;
-      if (phoneInput.startsWith("05") && phoneInput.length === 10) {
-        document.getElementById("otpSection").style.display = "block";
-        document.getElementById("loginMessage").innerText = "OTP has been sent.";
-      } else {
-        document.getElementById("loginMessage").innerText = "Please enter a valid Saudi phone number.";
-      }
-    }
-
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const otp = document.getElementById("otp").value;
-      if (otp === "4321") {
-        window.location.href = "admin_dashboard_ai_tools.html";
-      } else if (otp === "55555") {
-        window.location.href = "technician_dashboard.html";
-      } else {
-        document.getElementById("loginMessage").innerText = "Incorrect OTP code.";
-      }
-    });
-  </script>
+        {% if message %}
+        <div class="message">{{ message }}</div>
+        {% endif %}
+    </div>
 </body>
 </html>

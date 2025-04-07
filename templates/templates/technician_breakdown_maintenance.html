@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breakdown Maintenance - Technician</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #2196F3;
+      color: white;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e88e5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Breakdown Maintenance</h2>
+    <form id="breakdownForm">
+      <label for="projectName">Project Name</label>
+      <input type="text" id="projectName" name="projectName" required>
+
+      <label for="elevatorNumber">Elevator Number</label>
+      <input type="text" id="elevatorNumber" name="elevatorNumber" required>
+
+      <label for="elevatorType">Elevator Type</label>
+      <input type="text" id="elevatorType" name="elevatorType" placeholder="e.g., Otis, Schindler, Kone">
+
+      <label for="elevatorModel">Elevator Model</label>
+      <input type="text" id="elevatorModel" name="elevatorModel" placeholder="e.g., KCE-B12">
+
+      <label for="date">Date of Issue</label>
+      <input type="date" id="date" name="date">
+
+      <label for="description">Problem Description</label>
+      <textarea id="description" name="description" rows="4"></textarea>
+
+      <label for="images">Upload Problem Images</label>
+      <input type="file" id="images" name="images" accept="image/*" multiple>
+
+      <button type="button" onclick="getAiSuggestion()">AI Diagnostic Suggestion</button>
+
+      <label for="aiSuggestion">AI Suggested Solution</label>
+      <textarea id="aiSuggestion" name="aiSuggestion" rows="3" readonly></textarea>
+
+      <label for="recommendation">Technician Recommendation</label>
+      <textarea id="recommendation" name="recommendation" rows="3"></textarea>
+
+      <button type="submit">Submit Report</button>
+    </form>
+  </div>
+
+  <script>
+    function getAiSuggestion() {
+      const description = document.getElementById('description').value;
+      const aiSuggestion = document.getElementById('aiSuggestion');
+      aiSuggestion.value = "Analyzing issue using AI...";
+      
+      setTimeout(() => {
+        aiSuggestion.value = "Suggested solution: Check door sensors and clean contact pins."; // mock output
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
