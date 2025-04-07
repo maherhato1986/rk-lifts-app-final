@@ -5,9 +5,7 @@ const { Pool } = require('pg');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// إعداد الاتصال بقاعدة البيانات على Render
-const { Pool } = require('pg');
-
+// الاتصال بقاعدة البيانات باستخدام DATABASE_URL من البيئة
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -15,13 +13,12 @@ const pool = new Pool({
   }
 });
 
-
 // إعدادات Express
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// توجيه صفحة تسجيل الدخول
+// صفحة تسجيل الدخول
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'templates', 'login.html'));
 });
