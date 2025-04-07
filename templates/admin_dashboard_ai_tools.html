@@ -68,5 +68,29 @@
       window.location.href = '/login';
     }
   </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const adminRoutes = {
+    'btn-projects': '/admin_projects.html',
+    'btn-clients': '/admin_clients.html',
+    'btn-quotes': '/admin_quotes.html',
+    'btn-finance': '/admin_finance.html',
+    'btn-review': '/review_reports.html',
+    'btn-faults': '/fault_reports.html',
+    'btn-logs': '/elevator_logs.html',
+    'btn-report-pdf': '/report_pdf.html',
+    'btn-dashboard': '/admin_dashboard.html'
+  };
+
+  for (const [id, path] of Object.entries(adminRoutes)) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("click", () => window.location.href = path);
+    }
+  }
+});
+</script>
 </body>
+
 </html>

@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Fault Diagnosis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      display: flex;
+      height: 100vh;
+      margin: 0;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #1f2937;
+      color: white;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    .sidebar h3 {
+      margin-bottom: 1rem;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar li {
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      color: #9ca3af;
+    }
+    .sidebar li:hover {
+      color: white;
+    }
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+    .chat-box {
+      flex: 1;
+      background: white;
+      border: 1px solid #e5e7eb;
+      padding: 1rem;
+      overflow-y: auto;
+      border-radius: 0.5rem;
+    }
+    .chat-message {
+      margin-bottom: 1rem;
+    }
+    .chat-message.user {
+      text-align: right;
+    }
+    .chat-message.ai {
+      text-align: left;
+      color: #047857;
+    }
+    .input-box {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .input-box input[type="text"],
+    .input-box input[type="file"] {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+    .input-box button {
+      padding: 0.5rem 1rem;
+      background-color: #047857;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h3>Previous Issues</h3>
+    <ul id="historyList">
+      <!-- History items -->
+    </ul>
+  </div>
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div class="input-box">
+      <input type="text" id="elevatorId" placeholder="Elevator ID" />
+      <input type="text" id="question" placeholder="Describe the issue..." />
+      <input type="file" id="imageUpload" />
+      <button onclick="sendQuestion()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function sendQuestion() {
+      const elevatorId = document.getElementById('elevatorId').value;
+      const question = document.getElementById('question').value;
+      const imageFile = document.getElementById('imageUpload').files[0];
+      const chatBox = document.getElementById('chatBox');
+
+      if (!elevatorId || !question) {
+        alert('Please enter both elevator ID and a question.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("elevator_id", elevatorId);
+      formData.append("question", question);
+      if (imageFile) formData.append("image", imageFile);
+
+      // Display user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message user';
+      userMsg.innerText = question;
+      chatBox.appendChild(userMsg);
+
+      fetch('/ai-diagnose', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'chat-message ai';
+        aiMsg.innerText = data.response || 'AI response error.';
+        chatBox.appendChild(aiMsg);
+      })
+      .catch(err => {
+        const errMsg = document.createElement('div');
+        errMsg.className = 'chat-message ai';
+        errMsg.innerText = 'Error connecting to AI.';
+        chatBox.appendChild(errMsg);
+      });
+    }
+  </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("/ai-diagnosis-history")
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      data.forEach((item) => {
+        const li = document.createElement("li");
+        li.innerText = `${item.elevator_id} – ${new Date(item.created_at).toLocaleDateString()}`;
+        li.title = item.question;
+        li.addEventListener("click", () => {
+          const chatBox = document.getElementById("chatBox");
+          chatBox.innerHTML = `
+            <div class='chat-message user'>${item.question}</div>
+            <div class='chat-message ai'>${item.ai_response}</div>
+            ${item.image_url ? `<img src="${item.image_url}" style="max-width: 300px; margin-top: 10px;" />` : ""}
+          `;
+        });
+        list.appendChild(li);
+      });
+    })
+    .catch(err => console.error("Error loading history:", err));
+});
+</script>
+</body>
+
+</html>

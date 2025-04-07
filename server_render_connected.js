@@ -1,55 +1,42 @@
 
+// في أعلى الملف:
 const express = require('express');
-const path = require('path');
+const bodyParser = require('body-parser');
 const { Pool } = require('pg');
-const app = express();
-const PORT = process.env.PORT || 3000;
+require('dotenv').config();
 
-// الاتصال بقاعدة البيانات باستخدام DATABASE_URL من البيئة
+const app = express();
+const port = process.env.PORT || 3000;
+
+// ربط قاعدة البيانات باستخدام Environment Variable DATABASE_URL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: { rejectUnauthorized: false },
 });
 
-// إعدادات Express
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static('public'));
+app.set('view engine', 'html');
 
-// صفحة تسجيل الدخول
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'login.html'));
-});
+// استقبال بيانات تقرير الفني
+app.post('/submit-report', async (req, res) => {
+  const { elevator_id, technician_name, status, notes } = req.body;
 
-// معالجة تسجيل الدخول
-app.post('/login', async (req, res) => {
-  const { phone } = req.body;
   try {
-    const result = await pool.query('SELECT role FROM users WHERE phone = $1', [phone]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Please ask the administrator to register your number in the system. Contact: +966542805145 or admin@rk-lifts.com"
-      });
-    }
-
-    const role = result.rows[0].role;
-    if (role === 'admin') {
-      res.json({ success: true, redirect: '/admin/dashboard' });
-    } else if (role === 'technician') {
-      res.json({ success: true, redirect: '/technician/dashboard' });
-    } else {
-      res.status(403).json({ success: false, message: 'Unauthorized role' });
-    }
+    const query = `
+      INSERT INTO reports (elevator_id, technician_name, status, notes)
+      VALUES ($1, $2, $3, $4)
+    `;
+    await pool.query(query, [elevator_id, technician_name, status, notes]);
+    res.send('<h3>Report submitted successfully! <a href="/submit_report.html">Submit another</a></h3>');
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Error saving report:', err);
+    res.status(500).send('Error saving report');
   }
 });
 
 // تشغيل السيرفر
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

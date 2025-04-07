@@ -66,5 +66,36 @@
         </form>
         <div class="footer-note">Authorized users only</div>
     </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector("form");
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const phoneInput = form.querySelector("input[name='phone']");
+      const phone = phoneInput ? phoneInput.value : "";
+
+      if (!phone) return alert("Please enter your phone number");
+
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+
+      const data = await response.json();
+      if (data.success && data.redirect) {
+        window.location.href = data.redirect === "/admin/dashboard"
+          ? "/admin_dashboard_ai_tools.html"
+          : "/technician_ai_assistance.html";
+      } else {
+        alert(data.message || "Login failed.");
+      }
+    });
+  }
+});
+</script>
 </body>
+
 </html>
