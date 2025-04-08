@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>View Invoices</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maintenance Reports</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
       margin: 0;
       padding: 0;
-      background-color: #f2f2f2;
     }
     header {
       background-color: #00264d;
@@ -21,9 +21,6 @@
       padding: 20px;
       max-width: 1000px;
       margin: auto;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     h2 {
       color: #00264d;
@@ -36,63 +33,63 @@
     }
     th, td {
       padding: 12px;
+      border: 1px solid #ddd;
       text-align: center;
-      border: 1px solid #ccc;
     }
     th {
       background-color: #004080;
       color: white;
     }
     tr:nth-child(even) {
-      background-color: #f9f9f9;
+      background-color: #f2f2f2;
     }
-    .btn {
+    button {
+      padding: 6px 12px;
       background-color: #007bff;
       color: white;
-      padding: 8px 12px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
-    .btn:hover {
+    button:hover {
       background-color: #0056b3;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Invoices</h1>
+    <h1>Maintenance Reports</h1>
   </header>
 
   <div class="container">
-    <h2>Issued Invoices</h2>
+    <h2>Submitted Maintenance Reports</h2>
     <table>
       <thead>
         <tr>
-          <th>Invoice Number</th>
-          <th>Client Name</th>
+          <th>Project Name</th>
+          <th>Technician Name</th>
           <th>Date</th>
-          <th>Project</th>
+          <th>Elevator Type</th>
           <th>Status</th>
-          <th>View</th>
+          <th>View Report</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>#INV-00123</td>
-          <td>Saudi Elevators Co.</td>
+          <td>Project A</td>
+          <td>Ahmed Ali</td>
           <td>2025-04-01</td>
-          <td>Project Al Salam</td>
-          <td>Paid</td>
-          <td><button class="btn" onclick="window.open('invoice_00123.pdf')">View PDF</button></td>
+          <td>Schindler</td>
+          <td>Completed</td>
+          <td><button onclick="window.open('report_a.pdf')">View PDF</button></td>
         </tr>
         <tr>
-          <td>#INV-00124</td>
-          <td>Jeddah Lifts</td>
-          <td>2025-04-03</td>
-          <td>Project King Tower</td>
-          <td>Unpaid</td>
-          <td><button class="btn" onclick="window.open('invoice_00124.pdf')">View PDF</button></td>
+          <td>Project B</td>
+          <td>Khaled Omar</td>
+          <td>2025-04-02</td>
+          <td>Otis</td>
+          <td>Pending</td>
+          <td><button onclick="window.open('report_b.pdf')">View PDF</button></td>
         </tr>
       </tbody>
     </table>

@@ -2,52 +2,59 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
-const multer = require('multer');
 const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// PostgreSQL connection
+// إعداد الاتصال بقاعدة البيانات
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: false }
 });
 
-// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
-// serve static files like logo
-app.use(express.static(path.join(__dirname, 'public')));
+// إعداد الواجهات
+const basePath = path.join(__dirname, 'templates');
 
-// serve templates folder as views
-app.use(express.static(path.join(__dirname, 'templates')));
-
-// تقديم الواجهة الرئيسية (واجهة تسجيل الدخول مثلاً)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'login.html'));
+  res.sendFile(path.join(basePath, 'auth', 'login.html'));
 });
 
-// استقبال تقارير الأعطال
-app.post('/submit-report', async (req, res) => {
-  const { elevator_id, technician_name, status, notes } = req.body;
-
-  try {
-    const query = `
-      INSERT INTO reports (elevator_id, technician_name, status, notes)
-      VALUES ($1, $2, $3, $4)
-    `;
-    await pool.query(query, [elevator_id, technician_name, status, notes]);
-    res.send('<h3>Report submitted successfully! <a href="/submit_report.html">Submit another</a></h3>');
-  } catch (err) {
-    console.error('Error saving report:', err);
-    res.status(500).send('Error saving report');
-  }
+app.get('/admin/dashboard', (req, res) => {
+  res.sendFile(path.join(basePath, 'admin', 'admin_dashboard_ai_tools.html'));
 });
 
-// Start server
+app.get('/technician/dashboard', (req, res) => {
+  res.sendFile(path.join(basePath, 'technician', 'technician_dashboard.html'));
+});
+
+app.get('/ai-diagnose', (req, res) => {
+  res.sendFile(path.join(basePath, 'technician', 'technician_ai_diagnosis.html'));
+});
+
+app.get('/submit-report', (req, res) => {
+  res.sendFile(path.join(basePath, 'technician', 'submit_report_with_form.html'));
+});
+
+app.get('/view-reports', (req, res) => {
+  res.sendFile(path.join(basePath, 'reports', 'view_maintenance_reports.html'));
+});
+
+app.get('/report/pdf', (req, res) => {
+  res.sendFile(path.join(basePath, 'reports', 'report_pdf.html'));
+});
+
+// صفحة غير موجودة
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(basePath, 'auth', '404.html'));
+});
+
 app.listen(port, () => {
   console.log(`✅ Server running at http://localhost:${port}`);
 });
