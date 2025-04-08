@@ -1,3 +1,4 @@
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
@@ -21,68 +22,73 @@ app.use(express.static('public'));
 
 // ==== توجيه الصفحات ====
 
-// تسجيل الدخول
+const templatesPath = path.join(__dirname, 'templates');
+
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/templates/auth/login.html');
+  res.sendFile(path.join(templatesPath, 'auth', 'login.html'));
 });
 
-// تحقق OTP (اختياري)
-app.get('/otp', (req, res) => {
-  res.sendFile(__dirname + '/templates/auth/otp_verification.html');
-});
-
-// لوحة المدير
 app.get('/admin/dashboard', (req, res) => {
-  res.sendFile(__dirname + '/templates/admin/admin_dashboard_ai_tools.html');
+  res.sendFile(path.join(templatesPath, 'admin', 'admin_dashboard_ai_tools.html'));
 });
 
-// لوحة الفني
 app.get('/technician/dashboard', (req, res) => {
-  res.sendFile(__dirname + '/templates/technician/technician_breakdown_maintenance.html');
+  res.sendFile(path.join(templatesPath, 'technician', 'technician_breakdown_maintenance.html'));
 });
 
-// صفحة التشخيص الذكي للفني
 app.get('/technician/ai-diagnosis', (req, res) => {
-  res.sendFile(__dirname + '/templates/technician/technician_ai_diagnosis.html');
+  res.sendFile(path.join(templatesPath, 'technician', 'technician_ai_diagnosis.html'));
 });
 
-// رفع تقارير الأعطال (نموذج)
 app.get('/technician/fault-report', (req, res) => {
-  res.sendFile(__dirname + '/templates/technician/fault_report_form.html');
+  res.sendFile(path.join(templatesPath, 'technician', 'fault_report_form.html'));
 });
 
-// عرض تقارير الصيانة
 app.get('/technician/reports', (req, res) => {
-  res.sendFile(__dirname + '/templates/reports/view_maintenance_reports.html');
+  res.sendFile(path.join(templatesPath, 'reports', 'view_maintenance_reports.html'));
 });
 
-// صفحات خطأ
 app.get('/unauthorized', (req, res) => {
-  res.sendFile(__dirname + '/templates/auth/401.html');
+  res.sendFile(path.join(templatesPath, 'auth', '401.html'));
 });
 
 app.get('/not-found', (req, res) => {
-  res.sendFile(__dirname + '/templates/auth/404.html');
+  res.sendFile(path.join(templatesPath, 'auth', '404.html'));
 });
 
-// ===== تسجيل تقرير صيانة (مثال على POST) =====
-app.post('/submit-report', async (req, res) => {
-  const { elevator_id, technician_name, status, notes } = req.body;
+// تسجيل الدخول وتوجيه المستخدم حسب الصلاحية
+app.post('/login', async (req, res) => {
+  const { phone } = req.body;
 
   try {
-    const query = `
-      INSERT INTO reports (elevator_id, technician_name, status, notes)
-      VALUES ($1, $2, $3, $4)
-    `;
-    await pool.query(query, [elevator_id, technician_name, status, notes]);
-    res.send('<h3>تم إرسال التقرير بنجاح! <a href="/technician/fault-report">إرسال تقرير آخر</a></h3>');
+    const result = await pool.query('SELECT role FROM users WHERE phone = $1', [phone]);
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: 'Please ask the administrator to register your number in the system. Contact: +966542805145 or admin@rk-lifts.com',
+      });
+    }
+
+    const user = result.rows[0];
+    const role = user.role;
+
+    let redirectPath = '/';
+    if (role === 'admin') {
+      redirectPath = '/admin/dashboard';
+    } else if (role === 'technician') {
+      redirectPath = '/technician/dashboard';
+    }
+
+    res.json({ success: true, redirect: redirectPath });
+
   } catch (err) {
-    console.error('خطأ في حفظ التقرير:', err);
-    res.status(500).send('تعذر حفظ التقرير');
+    console.error('Login error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// ===== تشغيل السيرفر =====
+// تشغيل السيرفر
 app.listen(port, () => {
   console.log(`✅ RK LIFTS APP is running at: http://localhost:${port}`);
 });
