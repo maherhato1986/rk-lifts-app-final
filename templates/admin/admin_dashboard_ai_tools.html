@@ -1,12 +1,13 @@
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard - RKLIFTS</title>
-  <link href="/public/css/style.css" rel="stylesheet" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - RKLIFTS</title>
+<link href="/public/css/style.css" rel="stylesheet"/>
+<style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -41,35 +42,80 @@
       font-weight: bold;
     }
   </style>
-</head>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/></head>
 <body>
-  <header>
-    <img src="/public/images/logo.png" alt="RK Lifts Logo" />
-    <div>
-      <nav>
-        <a href="/admin/projects">Projects</a>
-        <a href="/admin/customers">Customers</a>
-        <a href="/admin/quotes">Quotes</a>
-        <a href="/admin/invoices">Invoices</a>
-        <a href="/admin/reports">Reports</a>
-        <a href="/admin/financials">Financials</a>
-        <button class="logout" onclick="logout()">Logout</button>
-      </nav>
-    </div>
-  </header>
-
-  <div class="content">
-    <h1>Welcome to the Admin Dashboard</h1>
-    <p>This is the main control center for managing RK LIFTS operations.</p>
-  </div>
-
-  <script>
+<div style="width: 250px; height: 100vh; background: #2c3e50; color: white; position: fixed; left: 0; top: 0; padding-top: 20px;">
+<h2 style="text-align: center; margin-bottom: 20px;">Admin Panel</h2>
+<ul style="list-style: none; padding: 0;">
+<li style="padding: 10px 20px;">
+<a href="/admin/admin_dashboard_ai_tools" style="color: white; text-decoration: none;">
+<i class="fas fa-chart-line"></i> Dashboard
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/add_project" style="color: white; text-decoration: none;">
+<i class="fas fa-folder-plus"></i> Add Project
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/add_user" style="color: white; text-decoration: none;">
+<i class="fas fa-user-plus"></i> Add User
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/generate_invoice" style="color: white; text-decoration: none;">
+<i class="fas fa-file-invoice-dollar"></i> Generate Invoice
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/generate_quote" style="color: white; text-decoration: none;">
+<i class="fas fa-file-signature"></i> Generate Quote
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/manage_clients" style="color: white; text-decoration: none;">
+<i class="fas fa-users"></i> Manage Clients
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/manage_projects" style="color: white; text-decoration: none;">
+<i class="fas fa-tasks"></i> Manage Projects
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/Notifications_System" style="color: white; text-decoration: none;">
+<i class="fas fa-bell"></i> Notifications
+      </a>
+</li>
+<li style="padding: 10px 20px;">
+<a href="/admin/general_settings" style="color: white; text-decoration: none;">
+<i class="fas fa-cogs"></i> Settings
+      </a>
+</li>
+</ul>
+</div>
+<div style="margin-left: 260px; padding: 20px;">
+<header>
+<img alt="RK Lifts Logo" src="/public/images/logo.png"/>
+<div>
+<nav>
+<a href="/admin/projects">Projects</a>
+<a href="/admin/customers">Customers</a>
+<a href="/admin/quotes">Quotes</a>
+<a href="/admin/invoices">Invoices</a>
+<a href="/admin/reports">Reports</a>
+<a href="/admin/financials">Financials</a>
+<button class="logout" onclick="logout()">Logout</button>
+</nav>
+</div>
+</header><div class="content">
+<h1>Welcome to the Admin Dashboard</h1>
+<p>This is the main control center for managing RK LIFTS operations.</p>
+</div><script>
     function logout() {
       window.location.href = '/login';
     }
-  </script>
-
-<script>
+  </script><script>
 document.addEventListener("DOMContentLoaded", function () {
   const adminRoutes = {
     'btn-projects': '/admin_projects.html',
@@ -90,7 +136,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
-</script>
-</body>
-
+</script></div></body>
 </html>
