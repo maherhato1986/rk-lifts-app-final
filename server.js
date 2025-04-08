@@ -161,6 +161,10 @@ app.get('/technician/view_maintenance_reports', (req, res) => {
   res.sendFile(path.join(__dirname, 'templates/technician/view_maintenance_reports.html'));
 });
 
+app.get('/', (req, res) => {
+  res.redirect('/auth/login');
+});
+
 app.listen(port, () => {
   console.log('✅ RK LIFTS APP is running at: http://localhost:' + port);
 });
