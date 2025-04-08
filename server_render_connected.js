@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
+const multer = require('multer'); // ← تأكد من وجودها
 require('dotenv').config();
 
 const app = express();
