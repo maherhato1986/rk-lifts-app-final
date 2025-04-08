@@ -7,6 +7,9 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// ✅ طباعة متغير الاتصال للتأكد إنه مربوط صح
+console.log('📦 DATABASE_URL =', process.env.DATABASE_URL);
+
 // إعداد قاعدة البيانات
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -17,19 +20,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// تعيين مجلد القوالب
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 
-// تحويل الصفحة الرئيسية إلى صفحة تسجيل الدخول
+// الصفحة الرئيسية
 app.get('/', (req, res) => {
   res.redirect('/auth/login');
 });
 
-// التوجيه الديناميكي لكل الملفات داخل مجلد templates (جميع المجلدات الفرعية)
+// التوجيه الديناميكي للمجلدات
 const folders = ['admin', 'auth', 'reports', 'shared', 'technician'];
-
 folders.forEach(folder => {
   app.get(`/${folder}/:page`, (req, res) => {
     const page = req.params.page;
@@ -38,7 +39,7 @@ folders.forEach(folder => {
   });
 });
 
-// التحقق من رقم الجوال قبل الدخول
+// التحقق من رقم الجوال
 app.post('/verify-phone', async (req, res) => {
   const { phone } = req.body;
   try {
@@ -61,7 +62,7 @@ app.post('/verify-phone', async (req, res) => {
   }
 });
 
-// تشغيل الخادم
+// تشغيل السيرفر
 app.listen(port, () => {
-  console.log(`RKLIFTS APP is running on http://localhost:${port}`);
+  console.log(`✅ RKLIFTS APP is running on http://localhost:${port}`);
 });
