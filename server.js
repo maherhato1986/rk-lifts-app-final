@@ -7,7 +7,6 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// ✅ طباعة متغير الاتصال للتأكد إنه مربوط صح
 console.log('📦 DATABASE_URL =', process.env.DATABASE_URL);
 
 // إعداد قاعدة البيانات
@@ -16,6 +15,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+// إعدادات عامة
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
   res.redirect('/auth/login');
 });
 
-// التوجيه الديناميكي للمجلدات
+// التوجيه لجميع القوالب
 const folders = ['admin', 'auth', 'reports', 'shared', 'technician'];
 folders.forEach(folder => {
   app.get(`/${folder}/:page`, (req, res) => {
@@ -39,7 +39,7 @@ folders.forEach(folder => {
   });
 });
 
-// التحقق من رقم الجوال
+// ✅ تعديل استجابة التحقق لإرجاع JSON
 app.post('/verify-phone', async (req, res) => {
   const { phone } = req.body;
   try {
@@ -47,18 +47,21 @@ app.post('/verify-phone', async (req, res) => {
     if (result.rows.length > 0) {
       const role = result.rows[0].role;
       if (role === 'admin') {
-        res.redirect('/admin/admin_dashboard_ai_tools');
+        return res.json({ success: true, redirect: '/admin/admin_dashboard_ai_tools' });
       } else if (role === 'technician') {
-        res.redirect('/technician/submit_report_with_form');
+        return res.json({ success: true, redirect: '/technician/submit_report_with_form' });
       } else {
-        res.send('Unauthorized role');
+        return res.json({ success: false, message: 'Unauthorized role' });
       }
     } else {
-      res.send('Please ask the administrator to register your number in the system. Contact: +966542805145 or admin@rk-lifts.com');
+      return res.json({
+        success: false,
+        message: 'Please ask the administrator to register your number in the system. Contact: +966542805145 or admin@rk-lifts.com'
+      });
     }
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).send('Internal server error');
+    console.error('❌ Database error:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
