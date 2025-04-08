@@ -15,31 +15,30 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
-// إعدادات عامة
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// تعيين مجلد القوالب
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 
-// الصفحة الرئيسية
+// الصفحة الرئيسية = صفحة تسجيل الدخول
 app.get('/', (req, res) => {
   res.redirect('/auth/login');
 });
 
-// التوجيه لجميع القوالب
+// التوجيه الديناميكي لملفات HTML في مجلد templates
 const folders = ['admin', 'auth', 'reports', 'shared', 'technician'];
 folders.forEach(folder => {
   app.get(`/${folder}/:page`, (req, res) => {
-    const page = req.params.page;
-    const filePath = path.join(__dirname, 'templates', folder, `${page}.html`);
+    const filePath = path.join(__dirname, 'templates', folder, `${req.params.page}.html`);
     res.sendFile(filePath);
   });
 });
 
-// ✅ تعديل استجابة التحقق لإرجاع JSON
+// التحقق من رقم الجوال وتوجيه المستخدم
 app.post('/verify-phone', async (req, res) => {
   const { phone } = req.body;
   try {
@@ -47,25 +46,25 @@ app.post('/verify-phone', async (req, res) => {
     if (result.rows.length > 0) {
       const role = result.rows[0].role;
       if (role === 'admin') {
-        return res.json({ success: true, redirect: '/admin/admin_dashboard_ai_tools' });
+        res.json({ success: true, redirect: '/admin/admin_dashboard_ai_tools' });
       } else if (role === 'technician') {
-        return res.json({ success: true, redirect: '/technician/submit_report_with_form' });
+        res.json({ success: true, redirect: '/technician/submit_report_with_form' });
       } else {
-        return res.json({ success: false, message: 'Unauthorized role' });
+        res.json({ success: false, message: 'Unauthorized role' });
       }
     } else {
-      return res.json({
+      res.json({
         success: false,
         message: 'Please ask the administrator to register your number in the system. Contact: +966542805145 or admin@rk-lifts.com'
       });
     }
   } catch (err) {
-    console.error('❌ Database error:', err);
+    console.error('Database error:', err);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
-// تشغيل السيرفر
+// بدء الخادم
 app.listen(port, () => {
   console.log(`✅ RKLIFTS APP is running on http://localhost:${port}`);
 });
