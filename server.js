@@ -166,6 +166,24 @@ app.get('/templates/technician/technician_breakdown_maintenance', (req, res) => 
 app.get('/templates/technician/view_maintenance_reports', (req, res) => {
   res.sendFile(path.join(__dirname, 'templates/templates/technician/view_maintenance_reports.html'));
 });
+const fs = require('fs');
+
+// توجيه تلقائي لأي ملف HTML داخل مجلد templates والمجلدات الفرعية
+app.get('/:folder/:page', (req, res) => {
+  const { folder, page } = req.params;
+  const filePath = `templates/${folder}/${page}.html`;
+
+  if (fs.existsSync(filePath)) {
+    res.sendFile(path.join(__dirname, filePath));
+  } else {
+    res.status(404).send('Page not found');
+  }
+});
+
+// توجيه الصفحة الرئيسية إلى تسجيل الدخول
+app.get('/', (req, res) => {
+  res.redirect('/auth/login');
+});
 
 app.listen(port, () => {
   console.log('✅ RK LIFTS APP is running at: http://localhost:' + port);
